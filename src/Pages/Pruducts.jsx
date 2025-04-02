@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DataTable from "react-data-table-component";
 import Layout from "../Layout/Layout";
+import { API_url_live } from "../Utils/APIconfig";
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -27,7 +28,7 @@ const Product = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch("http://3.110.244.96:8000/api/v1/product/get"); // API endpoint for fetching products
+            const response = await fetch(`${API_url_live}product/get`); // API endpoint for fetching products
             const result = await response.json();
             if (result.success) {
                 setProducts(result.data); // Store fetched products in state
@@ -62,7 +63,7 @@ const Product = () => {
             formData.append("product_img", values.image); // Ensure this is the correct field name for the image
             formData.append("catagory", values.category); // Adding category to FormData
 
-            const response = await fetch("http://3.110.244.96:8000/api/v1/product/add", {
+            const response = await fetch(`${API_url_live}product/add`, {
                 method: "POST",
                 body: formData,
                 redirect: "follow"

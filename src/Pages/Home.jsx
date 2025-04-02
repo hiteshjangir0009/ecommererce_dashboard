@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import Layout from "../Layout/Layout";
+import {API_url_live} from '../Utils/APIconfig'
 
 const Home = () => {
     const [orders, setOrders] = useState([]);
@@ -19,7 +20,7 @@ const Home = () => {
                 redirect: "follow"
             };
 
-            const response = await fetch("http://3.110.244.96:8000/api/v1/checkout/getcheckout?role=superadmin", requestOptions);
+            const response = await fetch(`${API_url_live}checkout/getcheckout?role=superadmin`, requestOptions);
             const result = await response.json();
             setOrders(result.data)
             console.log(result.data)

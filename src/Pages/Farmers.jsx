@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DataTable from "react-data-table-component";
 import Layout from "../Layout/Layout";
+import { API_url_live } from "../Utils/APIconfig";
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -29,7 +30,7 @@ const Farmer = () => {
         formdata.append("address", values.address);
 
         try {
-            const response = await fetch("http://3.110.244.96:8000/api/v1/farmer/add", {
+            const response = await fetch(`${API_url_live}farmer/add`, {
                 method: "POST",
                 body: formdata,
             });
@@ -49,7 +50,7 @@ const Farmer = () => {
     // API request to get farmers list
     const getFarmers = async () => {
         try {
-            const response = await fetch("http://3.110.244.96:8000/api/v1/farmer/all", {
+            const response = await fetch(`${API_url_live}farmer/all`, {
                 method: "GET",
             });
             const result = await response.json();

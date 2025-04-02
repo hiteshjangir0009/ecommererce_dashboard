@@ -1,0 +1,1 @@
+export const API_url_live =`https://api.khetconnect.xyz/api/v1/`
