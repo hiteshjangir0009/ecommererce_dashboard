@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DataTable from "react-data-table-component";
 import Layout from "../Layout/Layout";
-import { API_url_live } from "../Utils/APIconfig";
+import { API_url_live, getCookie } from "../Utils/APIconfig";
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -92,6 +92,47 @@ const Product = () => {
         }
     };
 
+    const handleDelete = async (productId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+        if (!confirmDelete) return;
+    
+        const accessToken = getCookie("Access_token");
+    
+        if (!accessToken) {
+            alert("Token not found. Please login again.");
+            return;
+        }
+    
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", `Bearer ${accessToken}`);
+    
+        const formdata = new FormData();
+        formdata.append("productId", productId);
+    
+        const requestOptions = {
+            method: "DELETE",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+    
+        try {
+            const response = await fetch("https://api.khetconnect.xyz/api/v1/product/delete", requestOptions);
+            const result = await response.json();
+    
+            if (result.success) {
+                alert("Product deleted successfully!");
+                fetchProducts(); // Refresh list
+            } else {
+                alert(result.message || "Failed to delete product.");
+            }
+        } catch (error) {
+            console.error("Delete Error:", error);
+            alert("Error deleting product");
+        }
+    };
+    
+
 
     // Data Table Columns
     const columns = [
@@ -106,6 +147,21 @@ const Product = () => {
         { name: "Description", selector: (row) => row.description, sortable: true },
         { name: "Price (₹)", selector: (row) => row.price, sortable: true },
         { name: "Category", selector: (row) => row.catagory, sortable: true },
+        {
+            name: "Actions",
+            cell: (row) => (
+                <button
+                    onClick={() => handleDelete(row._id)}
+                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm"
+                >
+                    Delete
+                </button>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        },
+        
     ];
 
     return (
